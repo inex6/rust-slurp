@@ -120,7 +120,7 @@ impl State {
                 let ctx = Context::new(&surface).unwrap();
 
                 // Draw semi-transparent background
-                ctx.set_source_rgba(0.0, 0.0, 0.0, 0.2);
+                ctx.set_source_rgba(0.5, 0.5, 0.5, 0.4);
                 ctx.set_operator(cairo::Operator::Source);
                 ctx.paint().unwrap();
 
@@ -138,6 +138,26 @@ impl State {
                     ctx.rectangle(x, y, w, h);
                     ctx.stroke().unwrap();
                 }
+
+                // Draw crosshair at current mouse position
+                let crosshair_size = 10.0; // Length of each arm of the crosshair
+                let crosshair_width = 1.0; // Thickness of the crosshair lines
+                let crosshair_color_r = 1.0; // White
+                let crosshair_color_g = 1.0;
+                let crosshair_color_b = 1.0;
+
+                ctx.set_source_rgb(crosshair_color_r, crosshair_color_g, crosshair_color_b);
+                ctx.set_line_width(crosshair_width);
+
+                // Horizontal line
+                ctx.move_to(self.current_pos.0 - crosshair_size, self.current_pos.1);
+                ctx.line_to(self.current_pos.0 + crosshair_size, self.current_pos.1);
+                ctx.stroke().unwrap();
+
+                // Vertical line
+                ctx.move_to(self.current_pos.0, self.current_pos.1 - crosshair_size);
+                ctx.line_to(self.current_pos.0, self.current_pos.1 + crosshair_size);
+                ctx.stroke().unwrap();
 
                 surface.flush();
             }
